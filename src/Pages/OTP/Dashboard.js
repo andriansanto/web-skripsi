@@ -4,15 +4,13 @@ import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 import { otpRef, auth, db, logout } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
-import { getDocs, query, where } from "firebase/firestore";
+import { onSnapshot, getDocs, query, where } from "firebase/firestore";
 
 function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
   const [otpCode, setCode] = useState("");
   const [name, setName] = useState("");
   const navigate = useNavigate();
-
-
 
   const fetchUserData = async () => {
     try {
@@ -24,13 +22,17 @@ function Dashboard() {
 
       //get otp
       const otpQ = query(otpRef, where("email", "==", user?.email));
-      const querySnapshot = await getDocs(otpQ);
-      querySnapshot.forEach((doc) => {
-        // console.log(doc.id, " => ", doc.data());
-        setCode(doc.data().otp_code)
+      // const querySnapshot = await getDocs(otpQ);
+      // querySnapshot.forEach((doc) => {
+      //   // console.log(doc.id, " => ", doc.data());
+      //   setCode(doc.data().otp_code)
+      // });
+      const unsubscribe = onSnapshot(otpQ, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          setCode(doc.data().otp_code)
+        });
+        // console.log("Current cities in CA: ", cities.join(", "));
       });
-
-      console.log("test")
     } catch (err) {
       console.error(err);
       alert("Login Failed, Please Re-login!");
