@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 import { otpRef, auth, db, logout } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
-import { onSnapshot, getDocs, query, where } from "firebase/firestore";
+import { onSnapshot, query, where } from "firebase/firestore";
 
 function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
