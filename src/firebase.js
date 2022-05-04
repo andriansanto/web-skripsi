@@ -39,8 +39,9 @@ const logInWithEmailAndPassword = async (secret, password) => {
     await signInWithEmailAndPassword(auth, emails, password);
 
   } catch (err) {
-    console.error(err);
-    alert(err.message);
+    // console.error(err);
+    // alert(err.message);
+    alert("Please fill/check your secret id or password!");
   }
 };
 
