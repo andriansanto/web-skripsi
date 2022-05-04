@@ -39,12 +39,11 @@ const logInWithEmailAndPassword = async (secret, password) => {
     await signInWithEmailAndPassword(auth, emails, password);
 
   } catch (err) {
-    // console.error(err);
-    // alert(err.message);
-    if(secret == null || password == null){
-      alert("Please fill your secret id or password!g");
+    if(secret === "" || password === ""){
+      alert("Please fill your Secret ID or Password first!!!");
+    }else{
+      alert("Please check your Secret ID or Password!!!");
     }
-    alert("Please check your secret id or password!");
   }
 };
 
