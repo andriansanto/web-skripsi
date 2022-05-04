@@ -42,7 +42,7 @@ const logInWithEmailAndPassword = async (secret, password) => {
     // console.error(err);
     // alert(err.message);
     if(secret == null || password == null){
-      alert("Please fill your secret id or password!");
+      alert("Please fill your secret id or password!g");
     }
     alert("Please check your secret id or password!");
   }
