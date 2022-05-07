@@ -9,6 +9,8 @@ import { onSnapshot, query, where } from "firebase/firestore";
 function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
   const [otpCode, setCode] = useState("");
+  const [expDate, setExpDate] = useState("");
+  const [expTime, setExpTime] = useState("");
   const [name, setName] = useState("");
   const navigate = useNavigate();
 
@@ -22,20 +24,31 @@ function Dashboard() {
 
       //get otp
       const otpQ = query(otpRef, where("email", "==", user?.email));
-      // const querySnapshot = await getDocs(otpQ);
-      // querySnapshot.forEach((doc) => {
-      //   // console.log(doc.id, " => ", doc.data());
-      //   setCode(doc.data().otp_code)
-      // });
+      
       const unsubscribe = onSnapshot(otpQ, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
           setCode(doc.data().otp_code)
         });
         // console.log("Current cities in CA: ", cities.join(", "));
       });
+
+      const getDate = onSnapshot(otpQ, (querySnapshot)=>{
+        querySnapshot.forEach((doc)=>{
+          setExpDate(doc.data().expired_date)
+        })
+      });
+
+      
+      var expiredDate = new Date(expDate);
+
+      var h = Math.floor(expiredDate / 3600);
+      var m = Math.floor(expiredDate % 3600 / 60);
+      var s = Math.floor(expiredDate % 3600 % 60);
+      let validDate = h+":"+m+":"+s;
+      setExpTime(validDate);
+
     } catch (err) {
-      console.error(err);
-      alert("Login Failed, Please Re-login!");
+      alert("Please Re-login!");
     }
   };
 
@@ -43,6 +56,7 @@ function Dashboard() {
     if (loading) return;
     if (!user) return navigate("/");
     fetchUserData();
+    setTimeout(logout, 300000);
   }, [user, loading]);
   return (
         <div class="container">
@@ -51,7 +65,7 @@ function Dashboard() {
             <div class="box">
               <div class="row">
                 <h3>Hello, {name}!</h3>
-                <p>[Store] Verification Code: <b>{otpCode}</b>. valid for 1 Minute 30 Second, please beware of scam and don't give this code to anyone.</p>
+                <p>[Store] Verification Code: <b>{otpCode}</b>. valid until <b>{expTime}</b>, please beware of scam and don't give this code to anyone.</p>
               </div>
               <div class="button">
                 <input
