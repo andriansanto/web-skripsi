@@ -2,12 +2,15 @@ import { initializeApp } from "firebase/app";
 import {
   getAuth,
   signInWithEmailAndPassword,
+  setPersistence,
+  browserSessionPersistence,
   signOut,
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
 import {
   getFirestore,
   collection,
+  doc, 
+  getDoc
 } from "firebase/firestore";
 
 
@@ -36,6 +39,7 @@ const logInWithEmailAndPassword = async (secret, password) => {
     const RefSnap = await getDoc(getRef);
     const emails = RefSnap.data().email;
 
+    setPersistence(auth, browserSessionPersistence)
     await signInWithEmailAndPassword(auth, emails, password);
 
   } catch (err) {

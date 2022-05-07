@@ -9,7 +9,6 @@ import { onSnapshot, query, where } from "firebase/firestore";
 function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
   const [otpCode, setCode] = useState("");
-  const [expDate, setExpDate] = useState("");
   const [expTime, setExpTime] = useState("");
   const [name, setName] = useState("");
   const navigate = useNavigate();
@@ -28,24 +27,15 @@ function Dashboard() {
       const unsubscribe = onSnapshot(otpQ, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
           setCode(doc.data().otp_code)
+          var expiredDate = new Date(doc.data().expired_date);
+
+          var h = Math.floor(expiredDate / 3600);
+          var m = Math.floor(expiredDate % 3600 / 60);
+          var s = Math.floor(expiredDate % 3600 % 60);
+          let validDate = h+":"+m+":"+s;
+          setExpTime(validDate);
         });
-        // console.log("Current cities in CA: ", cities.join(", "));
       });
-
-      const getDate = onSnapshot(otpQ, (querySnapshot)=>{
-        querySnapshot.forEach((doc)=>{
-          setExpDate(doc.data().expired_date)
-        })
-      });
-
-      
-      var expiredDate = new Date(expDate);
-
-      var h = Math.floor(expiredDate / 3600);
-      var m = Math.floor(expiredDate % 3600 / 60);
-      var s = Math.floor(expiredDate % 3600 % 60);
-      let validDate = h+":"+m+":"+s;
-      setExpTime(validDate);
 
     } catch (err) {
       alert("Please Re-login!");
