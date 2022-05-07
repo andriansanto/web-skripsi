@@ -3,7 +3,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   setPersistence,
-  browserSessionPersistence,
+  inMemoryPersistence,
   signOut,
 } from "firebase/auth";
 import {
@@ -39,7 +39,7 @@ const logInWithEmailAndPassword = async (secret, password) => {
     const RefSnap = await getDoc(getRef);
     const emails = RefSnap.data().email;
 
-    setPersistence(auth, browserSessionPersistence)
+    setPersistence(auth, inMemoryPersistence)
     await signInWithEmailAndPassword(auth, emails, password);
 
   } catch (err) {
